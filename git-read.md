@@ -1,0 +1,9 @@
+```
+echo "# study-code-a" >> README.md
+git init
+git add README.md
+git commit -m "first commit"
+git remote add origin git@github.com:Anna0314zy/study-code-a.git
+git push -u origin master
+```
+
