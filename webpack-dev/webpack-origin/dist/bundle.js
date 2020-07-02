@@ -86,14 +86,29 @@
 /************************************************************************/
 /******/ ({
 
+/***/ "./src/index.css":
+/*!***********************!*\
+  !*** ./src/index.css ***!
+  \***********************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+// extracted by mini-css-extract-plugin
+
+/***/ }),
+
 /***/ "./src/index.js":
 /*!**********************!*\
   !*** ./src/index.js ***!
   \**********************/
-/*! no static exports found */
-/***/ (function(module, exports) {
+/*! no exports provided */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
 
-/**珠峰培训123**/// let str = require('!!inline-loader!./a.js');
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _index_css__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./index.css */ "./src/index.css");
+/* harmony import */ var _index_css__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_index_css__WEBPACK_IMPORTED_MODULE_0__);
+// let str = require('!!inline-loader!./a.js');
 // -! 不会再去通过 pre + normal loader来处理了
 /**
  * let str = require('-!inline-loader!./a.js');
@@ -145,6 +160,7 @@ inline-loader
 // let img = document.createElement('img');
 // img.src = p;
 // document.body.appendChild(img);
+
 
 /***/ })
 

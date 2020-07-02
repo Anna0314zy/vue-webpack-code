@@ -2,7 +2,9 @@ let path = require('path');
 let DonePlugin = require('./plugins/DonePlugin')
 let AsyncPlugin = require('./plugins/AsyncPlugin.js')
 let HtmlWebpackPlugin = require('html-webpack-plugin');
-let FileListPlugin = require('./plugins/FileListPlugin')
+let FileListPlugin = require('./plugins/FileListPlugin');
+let MinicssExtractPlugin =  require('mini-css-extract-plugin');
+let InlineSourcePlugin = require('./plugins/InlineSourcePlugin')
 class P {
     apply(compiler) {
         compiler.hooks.emit.tap('emit', function () {
@@ -40,41 +42,45 @@ module.exports = {
         //loader分类  pre   前面的laoder post 后面的  normal 正常的
         rules: [
             {
-                test: /\.less$/,
-                //目的就是很久图片生成一个mds 发射到dist目录下，file-loader会返回当前图片路径
-               //url-loader file-loader会处理路径
-                use:[{
-                    loader: 'style-loader',
-                    options: {
-                        insertAt:'top'
-                    }
-                } ,
-                'css-loader', 
-                'less-loader'
-            ]
-            },
-            {
-                test: /\.jpg$/,
-                //目的就是很久图片生成一个mds 发射到dist目录下，file-loader会返回当前图片路径
-               //url-loader file-loader会处理路径
-                use:{
-                    loader: 'url-loader',
-                    options: {
-                        limit: 200*1024 //Base64
-                    }
-                }
-            },
-            {
-                test: /\.js$/,
-                use: {
-                    loader: 'banner-loader',
-                    options: {
-                       text: 'zhufeng',
-                       filename: path.resolve(__dirname, 'banner.js')
-                    }
+                test: /\.css$/,
+                use: [MinicssExtractPlugin.loader, 'css-loader']
+            }
+            // {
+            //     test: /\.less$/,
+            //     //目的就是很久图片生成一个mds 发射到dist目录下，file-loader会返回当前图片路径
+            //    //url-loader file-loader会处理路径
+            //     use:[{
+            //         loader: 'style-loader',
+            //         options: {
+            //             insertAt:'top'
+            //         }
+            //     } ,
+            //     'css-loader', 
+            //     'less-loader'
+            // ]
+            // },
+            // {
+            //     test: /\.jpg$/,
+            //     //目的就是很久图片生成一个mds 发射到dist目录下，file-loader会返回当前图片路径
+            //    //url-loader file-loader会处理路径
+            //     use:{
+            //         loader: 'url-loader',
+            //         options: {
+            //             limit: 200*1024 //Base64
+            //         }
+            //     }
+            // },
+            // {
+            //     test: /\.js$/,
+            //     use: {
+            //         loader: 'banner-loader',
+            //         options: {
+            //            text: 'zhufeng',
+            //            filename: path.resolve(__dirname, 'banner.js')
+            //         }
             
-                }
-            },
+            //     }
+            // },
             // {
             //     test: /\.js$/,
             //     use: {
@@ -121,16 +127,22 @@ module.exports = {
         ]
     },
     plugins: [
+        new MinicssExtractPlugin({
+            filename: 'main.css'
+        }),
         // new P(),
         // new P1(),
         new HtmlWebpackPlugin({
             template: './src/index.html'
         }),
-        new FileListPlugin({
-            filename: 'list.md'
-        }),
-        new DonePlugin(),
-        new AsyncPlugin()
+        InlineSourcePlugin({
+            match: /\.(js|css)/
+        })
+        // new FileListPlugin({
+        //     filename: 'list.md'
+        // }),
+        // new DonePlugin(),
+        // new AsyncPlugin()
     ]
 
 }
