@@ -4,7 +4,8 @@ let AsyncPlugin = require('./plugins/AsyncPlugin.js')
 let HtmlWebpackPlugin = require('html-webpack-plugin');
 let FileListPlugin = require('./plugins/FileListPlugin');
 let MinicssExtractPlugin =  require('mini-css-extract-plugin');
-let InlineSourcePlugin = require('./plugins/InlineSourcePlugin')
+let InlineSourcePlugin = require('./plugins/InlineSourcePlugin');
+let UploadPlugin = require('./plugins/UploadPlugin');
 class P {
     apply(compiler) {
         compiler.hooks.emit.tap('emit', function () {
@@ -135,9 +136,16 @@ module.exports = {
         new HtmlWebpackPlugin({
             template: './src/index.html'
         }),
-        InlineSourcePlugin({
-            match: /\.(js|css)/
+        //上传到青牛
+        new UploadPlugin({
+            bucket: '', //对象存储
+            domain:"", //域名
+             accesskey: '', 
+             secretKey:""
         })
+        // new InlineSourcePlugin({
+        //     match: /\.(js|css)/
+        // })
         // new FileListPlugin({
         //     filename: 'list.md'
         // }),
