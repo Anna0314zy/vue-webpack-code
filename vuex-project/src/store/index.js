@@ -4,19 +4,20 @@ import Vuex from '../vuex'
 Vue.use(Vuex)
 const persits = (store) => {
   store.subscribe((mutation, state) => {
-    console.log(mutation, state);
+    console.log(mutation, state, 'store-persist');
     localStorage.setItem('vuex-state', JSON.stringify(state));
   })
 }
 export default new Vuex.Store({
   plugins: [persits],
   modules: { //模块管理
+  
     a: {
       state: { a: 1 },
       modules: {
         c: {
           state: { c: 1 },
-          getters: {
+          getters: { //所有的getter会被定义到getter
             // myAge(state){
             //   return state+18;
             // }
@@ -64,6 +65,7 @@ export default new Vuex.Store({
   },
   actions: {
     //异步获取完后 提交到mutatio中
+    //派发一个动作 然后到mutation
     asyncMinus({ commit }, payload) { //異步獲取完后 提交mutions中
       setTimeout(() => {
         commit('syncMinus', payload);

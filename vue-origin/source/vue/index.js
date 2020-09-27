@@ -14,6 +14,7 @@ Vue.prototype._init = function (options) {
     // mvvm原理 需要数据重新初始化
     initState(vm);//data computed  watch
     //初始化工作
+    console.log('vm.$options.el', vm.$options.el); //#app
     if (vm.$options.el) {
         vm.$mount();
     }
@@ -66,7 +67,9 @@ Vue.prototype._render = function() {
 Vue.prototype.$mount = function () {
     let vm = this;
     let el = vm.$options.el; // 获取元素 //#app
+    console.log('el-el-000', el);
     el = vm.$el = query(el);//获取当前挂载的节点 vm.$el就是我要挂载的一个元素
+    console.log('el----el', el);
     //渲染 通过watcher 来渲染
     //渲染watcher 用于渲染的watcher
     //vue 2.0 组件级别更新  new Vue产生一个组件

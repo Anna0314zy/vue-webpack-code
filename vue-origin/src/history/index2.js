@@ -109,3 +109,5 @@ setTimeout(() => {
     console.log(newVnode, 'newVnode');
     patch(oldVnode, newVnode);
 }, 1000);
+let vnode = h('div', {id:'wrapper, a:1'}, h('span', {style:{color:'red'},}, 'hello'), 'zfx');
+console.log(vnode, 'v---vnode');
