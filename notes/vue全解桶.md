@@ -44,3 +44,15 @@ export default (Vue) => {
 
 https://blog.csdn.net/weixin_41698051/article/details/107070908
 
+# 小知识点
+
+## 1.js
+
+```js
+arr.slice() 浅拷贝
+[...childNodes] 可以转化类数组为数组
+var ids = new Set();
+ids.has(id) //看看有没有 ids.add(id) 添加新的
+
+```
+
