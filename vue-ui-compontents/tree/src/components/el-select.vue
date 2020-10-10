@@ -1,48 +1,3 @@
-# vue2.0
-
-## 一.vue基础
-
-### 1.为啥data 是个函数
-
-为了保证每个组件都有自己独立的作用域 这与js的特性有关
-
-### 2.this.$set
-
-https://www.cnblogs.com/heavenYJJ/p/9559439.html
-
-```js
-
-```
-
-### 3.如何匹配模板里面的{{}}
-
-### 3.指令
-
-```js
-export default (Vue) => {
-  Vue.directive('loadmore', {
-    bind (el, binding, vnode) {
-      const SELECTWRAP_DOM = el.querySelector('.el-select-dropdown .el-select-dropdown__wrap')
-      SELECTWRAP_DOM.addEventListener('scroll', function () {
-        const CONDITION = this.scrollHeight - this.scrollTop <= this.clientHeight
-        if (CONDITION) {
-          binding.value()
-        }
-      })
-    }
-  })
-}
-```
-
-
-
-## 开发中遇到的问题
-
-### 1.下拉框返回1000条数据
-
-### 2.优化问题
-
-```js
 <template>
     <div class="content">
         <el-select v-model="choose" size="small" v-el-select-loadmore:rangeNumber="loadMore(rangeNumber)">
@@ -99,7 +54,6 @@ export default (Vue) => {
                 }//测试数据10万条数据, 这里数据多少条无所谓,list.slice(0, rangeNumber)方法只会默认加载初始的10条数据
             },
             loadMore(){
-              //也可以写成从接口获取数据的
                 //n是默认初始展示的条数会在渲染的时候就可以获取,具体可以打log查看
                 //if(n < 8) this.rangeNumber = 10 //elementui下拉超过7条才会出滚动条,如果初始不出滚动条无法触发loadMore方法
                 return () => this.rangeNumber += 5 //每次滚动到底部可以新增条数  可自定义
@@ -107,25 +61,14 @@ export default (Vue) => {
         }
     }
 </script>
-```
 
+<style  scoped>
+    .content{
+        padding: 24px 24px;
 
-
-https://blog.csdn.net/weixin_41698051/article/details/107070908
-
-#### 搞清clientHeight、offsetHeight、scrollHeight、offsetTop、scrollTop
-
-https://imweb.io/topic/57c5409e808fd2fb204eef52
-
-# 小知识点
-
-## 1.js
-
-```js
-arr.slice() 浅拷贝
-[...childNodes] 可以转化类数组为数组
-var ids = new Set();
-ids.has(id) //看看有没有 ids.add(id) 添加新的
-
-```
-
+    }
+    .el-input{
+        width: 400px;
+        margin: 20px;
+    }
+</style>

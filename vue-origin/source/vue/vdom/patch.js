@@ -10,6 +10,7 @@ export function render(vnode, container) {  //让虚拟节点渲染成真实节�
 //创建真实节点
 function createElm(vnode) {
     let { tag, children, key, props, text } = vnode;
+    console.log(vnode, 'vnode');
     if (typeof tag === 'string') {
         //标签 一个虚拟节点对应着真实节点
         vnode.el = document.createElement(tag);
@@ -70,8 +71,10 @@ export function patch(oldVnode, newVnode) {
     //1)先比对标签一样不一样
     if (oldVnode.tag !== newVnode.tag) {
         //必须拿到当前节点的父亲 才能操作替换自己
+        //newChild用来替换 oldChild 的新节点。如果该节点已经存在于 DOM 树中，则它首先会被从原始位置删除。oldChild被替换掉的原始节点。
         oldVnode.el.parentNode.replaceChild(createElm(newVnode), oldVnode.el);
     }
+
     //2)比较文本  标签一样 可能都是undefind
     // console.log(oldVnode.tag, 'tag');
     if (!oldVnode.tag) { //文本节点
@@ -109,8 +112,18 @@ export function patch(oldVnode, newVnode) {
     return el;
 
 }
+function createMapByKeyToIndex(oldchildren) {
+let map = {};
+for(let i = 0; i < oldchildren.length; i++) {
+    let current = oldchildren[i];
+    if (current.key) {
+        map[current.key] = i;
+    }
+}
+return map;
+}
 function updateChildren(parent, oldChildren, newChildren) {
-    //vue增加了很多优化策略 
+    //vue增加了很多优化策略  最常见的浏览器dom操作 开头 或者结尾插入 正序倒叙
     //向后面添加  插入dom 比较  4 个变成 5个  
     //双指针实现
     let oldStartIndex = 0;
@@ -122,22 +135,22 @@ function updateChildren(parent, oldChildren, newChildren) {
     let newStartVnode = newChildren[0];
     let newEndIndex = newChildren.length - 1;
     let newEndVnode = newChildren[newEndIndex];
-    function makeIndexByKey(children) {
-        let map = {};
-        children.forEach((item, index) => {
-            map[item.key] = index;
-        })
-        return map;
-    }
-    let map = makeIndexByKey(oldChildren);
+    // function makeIndexByKey(children) {
+    //     let map = {};
+    //     children.forEach((item, index) => {
+    //         map[item.key] = index;
+    //     })
+    //     return map;
+    // }
+    let map = createMapByKeyToIndex(oldChildren);
     console.log(map, 'map');
     while (oldStartIndex <= oldEndIndex && newStartIndex <= newEndIndex) {
         //先比较前面是否一样 再从后面比较是否一样
-        if (!oldStartVnode) {
+        if (!oldStartVnode) { //乱序对比的时候 老的元素会出现undefined
             oldStartVnode = oldChildren[++oldStartIndex]
         } else if (!oldEndVnode) {
             oldEndVnode = oldChildren[--oldEndIndex];
-        } else if (isSameNode(oldStartVnode, newStartVnode)) {
+        } else if (isSameNode(oldStartVnode, newStartVnode)) { //头跟头比
             //向后插
             // 先比较前面是否一样
             patch(oldStartVnode, newStartVnode);//用新的属性更新老的属性
@@ -146,20 +159,20 @@ function updateChildren(parent, oldChildren, newChildren) {
             // console.log(++oldStartIndex, '++oldStartIndex;');
             oldStartVnode = oldChildren[++oldStartIndex];
             newStartVnode = newChildren[++newStartIndex]
-        } else if (isSameNode(oldEndVnode, newEndVnode)) {
+        } else if (isSameNode(oldEndVnode, newEndVnode)) { // 尾跟尾比
             // 再从后面比较是否一样
             //向前插入
             patch(oldEndVnode, newEndVnode);//用新的属性更新老的属性
             oldEndVnode = oldChildren[--oldEndIndex];
             newEndVnode = newChildren[--newEndIndex];
-        } else if (isSameNode(oldStartVnode, newEndVnode)) {
+        } else if (isSameNode(oldStartVnode, newEndVnode)) { //头跟尾比
             //DCBA  倒叙
             //老的指针跟新的最后的指针比较  不一样就向后移动  新的向前 老的向后
             patch(oldStartVnode, newEndVnode);//用新的属性更新老的属性
             parent.insertBefore(oldStartVnode.el, oldEndVnode.el.nextSibling);
             oldStartVnode = oldChildren[++oldStartIndex];
             newEndVnode = newChildren[--newEndIndex];
-        } else if (isSameNode(oldEndVnode, newStartVnode)) {
+        } else if (isSameNode(oldEndVnode, newStartVnode)) {//尾跟头比
             //DABC 老的尾比新的头 老的尾巴移动到老的头前面
             // debugger;
             patch(oldEndVnode, newStartVnode);//用新的属性更新老的属性
@@ -167,7 +180,7 @@ function updateChildren(parent, oldChildren, newChildren) {
             oldEndVnode = oldChildren[--oldEndIndex];
             newStartVnode = newChildren[++newStartIndex];
         } else {
-            //两个列表  乱序不复用
+            //两个列表  乱序不复用 G C A E F
             //会先拿新节点的第一项 去老节点中匹配 如果匹配不到 直接将这个节点插入到
             //老节点的开头的前面 如果能查到直接移动老节点 
             //可能老节点中还有剩余 则直接删除
@@ -177,10 +190,9 @@ function updateChildren(parent, oldChildren, newChildren) {
             } else {
                 //我要移动这个元素
                 let moveVnode = oldChildren[moveIndex];
-                oldChildren[moveIndex] = undefined;
-                parent.insertBefore(moveVnode.el, oldStartVnode.el);
                 patch(moveVnode, newStartVnode);
-
+                parent.insertBefore(moveVnode.el, oldStartVnode.el);
+                oldChildren[moveIndex] = undefined;
             }
             //要将新节点的指针向后移动
             newStartVnode = newChildren[++newStartIndex];
@@ -192,11 +204,12 @@ function updateChildren(parent, oldChildren, newChildren) {
         for (let i = newStartIndex; i <= newEndIndex; i++) {
             //可能是inserBefore  插入的第二个参数是个null 等价于apendchild
             // parent.appendChild(createElm(newChildren[i]));
-            //参考节点
+            //参考节点 有可能从前面插也有可能从后面插
             let ele = newChildren[newEndIndex + 1] == null ? null : newChildren[newEndIndex + 1].el;
-            parent.insertBefore(createElm(newChildren[i]), ele);
+            parent.insertBefore(createElm(newChildren[i]), ele); //ele 是null 就相当于appendChild
         }
     }
+    //乱序暴力对比的时候 老的剩余的就删掉
     if (oldStartIndex <= oldEndIndex) {
         for (let i = oldStartIndex; i <= oldEndIndex; i++) {
             let child = oldChildren[i];
@@ -209,3 +222,4 @@ function updateChildren(parent, oldChildren, newChildren) {
 function isSameNode(oldNode, newNode) {
     return (oldNode.tag === newNode.tag) && (oldNode.key === newNode.key); //复用真实节点
 }
+//不能用index做key 一旦复用了 checkbox 就会错乱了

@@ -1,5 +1,5 @@
 import Vue from '../source/vue';
-// import '../src/history/index2'
+import '../src/history/index2'
 // import '../src/history/1.vue'
 // import '../src/history/index1'
 let vm = new Vue({

@@ -6,14 +6,17 @@
       :diectoryDrop="diectoryDrop"
       :delete="deletefn"
     ></my-tree>
+    <my-select></my-select>
   </div>
 </template>
 <script>
 import myTree from "./components/myTree";
+import mySelect from './components/el-select'
 import { getTreeList } from "../api";
 export default {
   components: {
     myTree,
+    mySelect
   },
   data() {
     return {

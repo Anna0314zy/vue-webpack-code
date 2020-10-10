@@ -6,6 +6,8 @@ import {vnode} from './create-element'
  * @param {*} props 节点属性
  * @param  {...any} children  所有孩子
  */
+// oldVnode = h('div',{id:'container'},
+//     h('span', {style:{color:'red'}}, 'hello'))
 export default function h(tag, props, ...children) {
     let key;
     if(props.key) {
