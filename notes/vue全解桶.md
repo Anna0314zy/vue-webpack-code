@@ -16,7 +16,7 @@ https://www.cnblogs.com/heavenYJJ/p/9559439.html
 
 ### 3.如何匹配模板里面的{{}}
 
-### 3.指令
+### 4.指令
 
 ```js
 export default (Vue) => {
@@ -34,7 +34,14 @@ export default (Vue) => {
 }
 ```
 
+### 5.transition
 
+```js
+import  Velocity from 'velocity-animate'
+https://www.cnblogs.com/zhaobao1830/p/7171408.html
+```
+
+### 6.import 'amfe-flexible'
 
 ## 开发中遇到的问题
 

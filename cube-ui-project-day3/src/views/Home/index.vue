@@ -3,10 +3,8 @@
     <!-- header部分 -->
     <HomeHeader :categories="categories" @change="change"></HomeHeader>
     <!-- 轮播图部分 -->
-
-    <!-- 我们在页面中 dispatch(action) -> ajax -> commit(mutation)->修改状态 -->
     <div class="home-slide">
-      <cube-slide :data="slides" />
+      <cube-slide :data="slides"/>
     </div>
     <!-- 当前滚动区域的包裹 -->
     <div class="home-wrapper">
@@ -25,81 +23,80 @@
 </template>
 
 <script>
-import HomeHeader from "./HomeHeader";
-import { createNamespacedHelpers } from "vuex";
-import * as types from "@/store/actions-type";
-import { fetchLessonList } from "@/api/home";
-let { mapActions, mapState, mapMutations } = createNamespacedHelpers("home"); // 把vuex中的命名空间全部定好
+import { createNamespacedHelpers } from 'vuex';
+import HomeHeader from './HomeHeader';
+// import { mapActions } from 'vuex';
+import * as types from '@/store/action-type.js';
+import { fetchLessonList } from '@/api/home';
 
-// import { mapActions } from "vuex";
+const { mapActions, mapState, mapMutations } = createNamespacedHelpers('home');
 export default {
   data() {
     return { size: 5, offset: 50 };
   },
   components: {
-    HomeHeader
+    HomeHeader,
   },
   computed: {
-    ...mapState(["categories", "slides"]) // 执行后返回的是一个对象
+    ...mapState(['categories', 'slides']),
   },
   created() {
-    // 页面一创建 可以定义一些公共数据 这些属性不需要动态的监控
+    // 页面一创建可以定义一些公共数据 这些数据 属性不需要动态的监控
     this.offsetIndex = 0;
     this.hasMore = true;
+  },
+  mounted() {
+    // this.$store.dispatch('home/setCategories');
+    this[types.SET_CATEGORIES]();
+    this[types.SET_SLIDES]();
+    // 防抖 - 不停的滚动 最后只触发一次 靠定时器
+    // 节流 一直滚动 不定期的触发 靠时差
+    let timer;
+    this.$refs.list.$el.addEventListener('scroll', (e) => {
+      if (timer) {
+        clearTimeout(timer);
+      }
+      timer = setTimeout(() => {
+        console.log(e.target.scrollTop);
+        sessionStorage.setItem('position', e.target.scrollTop);
+      }, 50);
+    });
+  },
+  activated() { // 激活 不会渲染dom
+    const position = sessionStorage.getItem('position') || 0;
+    this.$refs.list.$el.scrollTop = position;
+  },
+  deactivated() { // 失活
+
   },
   methods: {
     // 抓取列表数据
     async onFetch() {
-      // 获取接口数据
       if (this.hasMore) {
-        // 如果有更多数据 就去获取数据
-        let { result, hasMore } = await fetchLessonList(
-          this.size,
-          this.offsetIndex
-        );
-        this.hasMore = hasMore; // 当前是否还有
-        this.offsetIndex = this.offsetIndex + result.length; // 找到对应的偏移量
-        return result; // 每次返还的数据
-      } else {
-        return false; // 停止滚动
+        try {
+          const { result, hasMore } = await fetchLessonList(this.size, this.offsetIndex);
+          this.hasMore = hasMore;
+          this.offsetIndex = this.offsetIndex + result.length;
+          return result;
+        } catch (e) {
+          return false;
+        }
       }
+      return false;
     },
     // 切换课程
+    // ...mapActions('home', ['setCategories']),
+    ...mapActions([types.SET_CATEGORIES, types.SET_SLIDES]),
+    ...mapMutations([types.SET_CURRENT_LESSON]),
     change(value) {
-      this[types.SET_CURRENT_LESSON](value[0]); // 将我们的选中的结果通过mutation 传入到vuex中
-      this.hasMore = true; // 重置获取数据
+      this[types.SET_CURRENT_LESSON](value[0]);
+      this.hasMore = true;
       this.offsetIndex = 0;
       this.$refs.list.reset();
     },
-    ...mapMutations([types.SET_CURRENT_LESSON]),
-    ...mapActions([types.SET_CATEGORIES, types.SET_SLIDES])
-    // ...mapActions("home", ["setCategories"])
-  },
-  activated(){ // 激活
-    let position = sessionStorage.getItem('position') || 0;
-    this.$refs.list.$el.scrollTop = position;
-  },
-  deactivated(){ // 失活
 
   },
-  mounted() {
-    // this.$store.dispatch("home/setCategories");
-    // 1)默认加载分类  和 轮播图数据
-    this[types.SET_CATEGORIES](); // 没有依赖关系的
-    this[types.SET_SLIDES]();
-    // 防抖 定时器 节流 时差
-    let timer
-    this.$refs.list.$el.addEventListener('scroll',(e)=>{
-      if(timer){
-        clearTimeout(timer);
-      }
-      // 做防抖操作 存储滚动条位置
-      timer = setTimeout(() => {
-        sessionStorage.setItem('position',e.target.scrollTop);
-      }, 50);
-    })
 
-  }
 };
 </script>
 
@@ -154,4 +151,3 @@ img {
 // window.xxx = {},重新掉接口 或者 去local里区2
 
 // 权限问题
-

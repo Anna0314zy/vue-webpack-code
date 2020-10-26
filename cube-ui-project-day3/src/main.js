@@ -1,18 +1,18 @@
-import Vue from 'vue'
+import Vue from 'vue';
 import './cube-ui'; // 组件库
+
+
 import App from './App.vue';
 import router from './router';
 import store from './store';
-import 'amfe-flexible' // 实现pm2rem
-
-import filters from '@/utils/filters'
-
+import 'amfe-flexible'; // 实现pm2rem
+import filters from '@/utils/filters';
 // 定义全局过滤器
-for (let key in filters) {
+for (const key in filters) {
   Vue.filter(key, filters[key]);
 }
 
-
+window.$store = store;
 Vue.config.productionTip = false;
 
 new Vue({

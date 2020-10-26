@@ -98,16 +98,22 @@ let userList = [{
 }];
 let currentUrl = '';
 let btnPermission = [1, 3, 5];
-let menuList = [{
-    name: '联系我',
-    auth: 'contact',
-    path: '/contact'
-  }
-  // , {
-  //   name: '服务',
-  //   auth: 'service',
-  //   path: '/service'
-  // }
+// let menuList = [{
+//     name: '联系我',
+//     auth: 'contact',
+//     path: '/contact'
+//   }
+//   // , {
+//   //   name: '服务',
+//   //   auth: 'service',
+//   //   path: '/service'
+//   // }
+// ]
+let menuList = [
+  {pid: -1, name: '购物车', id: 1, auth: 'cart'},
+  {pid: 1, name: '购物车列表', id: 4, auth: 'cart-list'},
+  {pid: 4, name: '彩票', id: 5, auth: 'lottery'},
+  {pid: 4, name: '商品', id: 6, auth: 'product'},
 ]
 router.post('/api/login', async ctx => {
   // 登录接口
@@ -116,7 +122,7 @@ router.post('/api/login', async ctx => {
     password
   } = ctx.request.body;
   let user = userList.find(user => user.username === username && user.password === password);
-
+console.log(user, 'user');
   if (user) {
 
 

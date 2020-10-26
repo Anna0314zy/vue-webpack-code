@@ -13,25 +13,27 @@ export default {
   props: {
     categories: {
       type: Array,
-      default: () => []
-    }
+      default: () => [],
+    },
+  },
+  data() {
+    return {};
   },
   computed: {
     data() {
-      let defaultActive = [{ text: "全部课程", value: -1 }];
-      return this.categories.length > 0
-        ? [[...defaultActive, ...this.categories]]
-        : [defaultActive];
-    }
+      const defaultActive = [{ text: '全部课程', value: -1 }];
+      return [[...defaultActive, ...this.categories]];
+    },
   },
   methods: {
     selectHandler(value) {
-      this.$emit("change", value);
+      this.$emit('change', value);
     },
     show() {
+      console.log(this.$refs.drawer, 'this.$refs.drawe');
       this.$refs.drawer.show();
-    }
-  }
+    },
+  },
 };
 </script>
 <style lang="stylus">

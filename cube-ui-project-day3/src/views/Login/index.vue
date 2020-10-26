@@ -1,89 +1,87 @@
 <template>
-  <div class="login wrapper">
+<div>
+  <cube-form :model="model" @submit="submitHandler">
     <MHeader>登录</MHeader>
-    <div class="login-form">
-      <img src="../../assets/images/login_bg1.png" alt />
-      <cube-form :model="model" @submit="submitHandler">
-        <cube-form-group>
-          <cube-form-item :field="fields[0]"></cube-form-item>
-          <cube-form-item :field="fields[1]"></cube-form-item>
-        </cube-form-group>
-        <cube-form-group>
-          <cube-button type="submit">登录</cube-button>
-        </cube-form-group>
-      </cube-form>
-    </div>
-  </div>
-</template>
-<style lang="stylus">
-.login {
-  &-form {
-    width: 80%;
-    margin: 0 auto;
+    <cube-form-group>
+      <cube-form-item :field="fields[0]"></cube-form-item>
+      <cube-form-item :field="fields[1]"></cube-form-item>
+    </cube-form-group>
+    <cube-form-group>
+      <cube-button type="submit">Submit</cube-button>
+    </cube-form-group>
+  </cube-form>
 
-    img {
-      width: 100px;
-      height: 100px;
-      margin: 0 auto;
-      display: block;
-      margin-bottom: 40px;
-    }
-  }
-}
-</style>
+</div>
+</template>
+
 <script>
-import { mapActions } from "vuex";
+import { mapActions } from 'vuex';
+import * as types from '@/store/action-type';
 import MHeader from '@/components/MHeader'
-import * as types from "@/store/actions-type";
 export default {
-  components:{
-    MHeader
+  components: {
+    MHeader,
   },
   data() {
     return {
       model: {
-        username: "",
-        password: ""
+        username: '',
+        password: '',
       },
       fields: [
         {
-          type: "input",
-          modelKey: "username",
-          label: "用户名 ",
+          type: 'input',
+          modelKey: 'username',
+          label: '用户名',
           props: {
-            placeholder: "请输入用户名"
+            placeholder: '请输入用户名',
           },
           rules: {
-            required: true
-          }
+            required: true,
+          },
         },
         {
-          type: "input",
-          modelKey: "password",
-          label: "密码",
+          type: 'input',
+          modelKey: 'password',
+          label: '密码',
           props: {
-            placeholder: "请输入密码",
-            type: "password"
+            placeholder: '请输入用户名',
           },
           rules: {
-            required: true
-          }
-        }
-      ]
+            required: true,
+          },
+        },
+      ],
     };
   },
   methods: {
     ...mapActions([types.LOGIN]),
-    submitHandler(e) {
+    async submitHandler(e) {
       e.preventDefault();
-      try{
-        // 登录
-        this[types.LOGIN](this.model);
-        this.$router.push('/')
-      }catch(e){
+      try {
+        await this[types.LOGIN](this.model);
+        //登录 从哪个页面跳转过来的 待会跳转回去呢
+        this.$router.push('/');
+      } catch (e) {
         console.log(e);
+      }
+    },
+  },
+};
+</script>
+<style lang="stylus">
+  .login {
+    &-form {
+      width: 80%;
+      margin: 0 auto;
+
+      img {
+        width: 100px;
+        height: 100px;
+        margin: 0 auto;
+        display: block;
+        margin-bottom: 40px;
       }
     }
   }
-};
-</script>
+</style>

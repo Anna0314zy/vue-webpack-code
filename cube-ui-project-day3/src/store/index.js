@@ -1,87 +1,81 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
-import {
-  Toast
-} from 'cube-ui'
-import home from './modules/home'
-import * as types from './actions-type'
-import {
-  login,
-  validate,
-  upload
-} from '@/api/user'
-Vue.use(Vuex);
+import { Toast } from 'cube-ui';
+import home from './modules/home.js';
+import * as types from './action-type';
+import { login, validate } from '@/api/user.js';
 
+Vue.use(Vuex);
+console.log(types.PUSH_TOKEN, [types.PUSH_TOKEN], 'types.PUSH_TOKEN');
 export default new Vuex.Store({
   modules: {
-    home
+    home,
   },
   state: {
-    user: {}, // 存放用户信息的
-    ajaxToken: [],// 准备一个容器 放所有请求的
-    hasPermission:false,
-    menuPermission:false
+    user: {},
+    hasPermisson: false,
+    menuPermisson: false,
+    ajaxToken: [], // 准备一个容器放所有请求
   },
   mutations: {
-    // 发布订阅
     [types.PUSH_TOKEN](state, cancel) {
-      // 也可以使用push
-      state.ajaxToken = [...state.ajaxToken, cancel]
+      state.ajaxToken = [...state.ajaxToken, cancel];
     },
     [types.CLEAR_TOKEN](state) {
-      // 依次调用取消请求的方法
       state.ajaxToken.forEach(cancel => cancel());
-      state.ajaxToken = []; // 清空数组
+      state.ajaxToken = [];
     },
     [types.SET_USER](state, payload) {
-      state.user = payload
-      state.hasPermission = true; // 当前是否拉取过最新的权限
+      state.user = payload;
+      state.hasPermisson = true;
     },
-    [types.SET_MENU_LIST](state){
-      state.menuPermission = true;
+    [types.SET_MENU_LIST](state) {
+      state.menuPermisson = true;
     },
-    [types.UPLOAD](state,url){
-      // Vue.set()
-      state.user = {...state.user,url}
-    }
   },
   actions: {
-    // login
-    async [types.LOGIN]({
-      commit
-    }, user) {
-      console.log(user);
-      // debugger;
+    async [types.LOGIN]({ commit }, user) {
       try {
-        console.log(user,login)
-        // debugger;
-        let result = await login(user);
+        console.log('登录成功');
+        const result = await login(user);
+        // menuList 变换成树结构
+        const routeMap = result.menuList.reduce((memo, current) => {
+          memo[current.id] = current;
+          return memo;
+        }, {});
+        console.log(routeMap, 'routeMap');
+        const menuList = result.menuList.reduce((prev, current) => {
+          const { pid } = current;
+          const parent = routeMap[pid];
+          if (parent) {
+            parent.children = prev.children ? prev.children.push(current) : [current];
+          } else if (current.pid === -1) {
+            prev.push(current);
+          }
+          return prev;
+        }, []);
+        console.log(menuList, 'menuList-tree');
+
         commit(types.SET_USER, result);
-        /// 将token存储到localStorage中
-        localStorage.setItem('token', result.token); // 存储token
+        localStorage.setItem(('token'), result.token);
       } catch (e) {
-        console.log(e);
+        console.error('登录失败');
         Toast.$create({
-          txt: '用户无法登录',
-          time: 2000
-        }).show(); // 显示错误提示
-        return Promise.reject(e)
+          txt: '用户无法登陆',
+          time: 2000,
+        }).show();
+        return Promise.reject(e);
       }
     },
-    // validate
-    async [types.VALIDATE]({commit}){
-      try{ // 验证是否登录 将信息存入到vuex中
-         let user = await validate();
-         commit(types.SET_USER,user);
-         return true; // 验证成功
-      }catch(e){
-        console.log(e);
-        return false
+    // 直接在地址栏输入网址的时候需要检验
+    async [types.VALIDATE]({ commit }) {
+      try {
+        const user = await validate();
+        commit(types.SET_USER, user);
+        return true;
+      } catch (e) {
+        return false;
       }
     },
-    async [types.UPLOAD]({commit},fd){
-      let {url} = await upload(fd);
-      commit(types.UPLOAD,url)
-    }
-  }
+  },
 });
