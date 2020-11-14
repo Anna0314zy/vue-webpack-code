@@ -3,5 +3,8 @@
   <component name="VcsDirectoryMappings">
     <mapping directory="$PROJECT_DIR$" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/meau" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/ssr/vue-cli-ssr-example" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/ts/ts-vue" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/ts/vue-typescript-admin-template" vcs="Git" />
   </component>
 </project>
