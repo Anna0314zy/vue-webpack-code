@@ -2,6 +2,7 @@
 <div>
   <cube-form :model="model" @submit="submitHandler">
     <MHeader>登录</MHeader>
+<!--    <my-co></my-co>-->
     <cube-form-group>
       <cube-form-item :field="fields[0]"></cube-form-item>
       <cube-form-item :field="fields[1]"></cube-form-item>
@@ -16,11 +17,19 @@
 
 <script>
 import { mapActions } from 'vuex';
+
 import * as types from '@/store/action-type';
-import MHeader from '@/components/MHeader'
+
+import MHeader from '@/components/MHeader.vue';
+
+// import loadable from '../../utils/loadable.vue';
+
+// import p  from '../Profile/index.vue'
+
 export default {
   components: {
-    MHeader,
+    MHeader
+    // myCo: loadable(() => import('../Profile/index.vue')),
   },
   data() {
     return {

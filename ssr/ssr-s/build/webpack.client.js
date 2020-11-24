@@ -9,6 +9,7 @@ const resolve = dir => {
 }
 module.exports = merge(base, {
     entry: {
+
         client: resolve('../src/client-entry.js')
     },
     plugins: [

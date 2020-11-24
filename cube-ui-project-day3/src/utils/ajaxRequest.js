@@ -4,7 +4,7 @@ import {
 } from 'cube-ui';
 import store from '@/store';
 import * as types from '@/store/action-type.js';
-import router from '@/router';
+// import router from '@/router';
 // axios可以配配置拦截器 我可以给实例增加多个拦截器
 // axios 实例的唯一性 ，我可以给，每个请求 独立增加拦截器
 
@@ -21,13 +21,13 @@ class AjaxRequest {
 
   setInterceptor(instance, url) {
     instance.interceptors.request.use((config) => { // 请求拦截
-      console.log('请求前');
+      // console.log('请求前');
       const Cancel = axios.CancelToken;
       // 每次请求前 将token 放到请求中
       config.headers.token = localStorage.getItem('token') || '';
       config.cancelToken = new Cancel(((c) => {
-        console.log(c);
-        store.commit(types.PUSH_TOKEN, c);
+        // console.log(c);
+        store.commit(types.PUSH_TOKEN, c); //订阅
       }));
       // 请求前  增加请求队列
       if (Object.keys(this.queue).length === 0) {
@@ -41,9 +41,6 @@ class AjaxRequest {
       return config;
     }, err => Promise.reject(err));
     instance.interceptors.response.use((res) => { // 响应拦截
-      // 关闭loading
-      // 可以对返回的状态码做各种匹配
-      console.log('返回数据', res);
       delete this.queue[url];
       // 请求完成删除对应的url 当队列被情况隐藏掉
       if (Object.keys(this.queue).length === 0) {

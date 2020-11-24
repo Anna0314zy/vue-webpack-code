@@ -2,38 +2,49 @@
   <div>
     course
 
-    <Child :data="obj"></Child>
-    <button @click="add">改变data</button>
-    <button @click="addAsync">异步改变data</button>
+<!--    <Child :data="obj"></Child>-->
+<!--    <button @click="add">改变data</button>-->
+<!--    <button @click="addAsync">异步改变data</button>-->
+<!--    <div v-for="(item, key) in 9" :key="key" class="wrapper">-->
+<!--<div class="item">{{item}}</div>-->
+<!--    </div>-->
   </div>
+  <!-- 对象遍历 -->
+  <!-- <div v-for="(value, key, index) in object" :key="key">
+    {{ index }}. {{ key }} - {{ value }}
+  </div> -->
 </template>
 
 
 <script>
-import Child from "./child";
+// import Child from "./child";
 export default {
-  components: { Child },
+  components: { },
   data() {
     return {
       obj: {
-        name: "zy",
+        name: 'zy',
       },
     };
   },
   methods: {
     add() {
-      this.$set(this, "obj", {
-        name: "zy",
+      this.$set(this.obj, 'age', 12);
+      arr[0] = 5;
+
+
+      this.$set(this, 'obj', {
+        name: 'zy',
         id: 1,
       });
     },
     addAsync() {
       setTimeout(() => {
         this.obj = {
-           name: "zy",
+          name: 'zy',
           id: 1,
-          hobby: '篮球'
-        }
+          hobby: '篮球',
+        };
         // this.$set(this, "obj", {
         //   name: "zy",
         //   id: 1,
@@ -48,7 +59,7 @@ export default {
   //       console.log(vm);
   //   })
   // },
-  //a/1 a/2
+  // a/1 a/2
   // beforeRouteUpdate(){
 
   // },
@@ -57,3 +68,11 @@ export default {
   // }
 };
 </script>
+<style lang="stylus">
+.wrapper {
+  display flex
+  .item {
+    height 200px
+  }
+}
+</style>

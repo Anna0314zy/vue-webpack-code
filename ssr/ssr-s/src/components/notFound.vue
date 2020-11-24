@@ -1,6 +1,6 @@
 <template>
-<div class=”bar“>
-    bar.vue
+<div class=”bar-not“>
+    notFound
 </div>
 
 </template>

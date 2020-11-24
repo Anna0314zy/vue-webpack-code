@@ -1,10 +1,18 @@
 // 实现loading效果
-import Loading from '@/components/Loading';
+import Loading from '@/components/Loading.vue';
 
+import ErrorComponent from '../components/error.vue';
+console.log(Loading, 'Loading');
+
+console.log(Loading, 'Loading');
 const loadable = (asyncFunction) => {
+  console.log('异步加载的组件', Loading);
   const component = () => ({
     component: asyncFunction(),
     loading: Loading,
+    delay: 200,
+    error: ErrorComponent,
+    timeout: 3000,
   });
 
   // 最终要返回一个组件，组件需要有render，通过render 在去渲染一个异步组件
@@ -13,6 +21,7 @@ const loadable = (asyncFunction) => {
       return h(component);
     },
   };
+
   // 组件是一个对象 会变成render函数
 };
 export default loadable;

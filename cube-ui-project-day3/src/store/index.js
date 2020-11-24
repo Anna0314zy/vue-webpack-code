@@ -12,9 +12,9 @@ export default new Vuex.Store({
     home,
   },
   state: {
-    user: {},
-    hasPermisson: false,
-    menuPermisson: false,
+    user: {}, // user.meauList
+    hasPermisson: false, // 校验通过
+    menuPermisson: false, // 菜单是否要求权限
     ajaxToken: [], // 准备一个容器放所有请求
   },
   mutations: {
@@ -38,12 +38,12 @@ export default new Vuex.Store({
       try {
         console.log('登录成功');
         const result = await login(user);
+        // 做一个映射表
         // menuList 变换成树结构
         const routeMap = result.menuList.reduce((memo, current) => {
           memo[current.id] = current;
           return memo;
         }, {});
-        console.log(routeMap, 'routeMap');
         const menuList = result.menuList.reduce((prev, current) => {
           const { pid } = current;
           const parent = routeMap[pid];
@@ -54,8 +54,6 @@ export default new Vuex.Store({
           }
           return prev;
         }, []);
-        console.log(menuList, 'menuList-tree');
-
         commit(types.SET_USER, result);
         localStorage.setItem(('token'), result.token);
       } catch (e) {

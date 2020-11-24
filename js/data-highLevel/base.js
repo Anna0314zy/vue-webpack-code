@@ -9,11 +9,11 @@ function transform(str) {
 }
 console.log(transform('fontSizeSoioP'))
 function transformHump(str) {
-    // const reg = /([-])/g;
-    // let last = reg.lastIndex;
-    // console.log(last);
-    // if (reg.exec(str)) {
-    //     return str = str.slice
-    // }
+    const reg = /([-])/g;
+    let last = reg.lastIndex;
+    console.log(last);
+    if (reg.exec(str)) {
+        return str = str.slice
+    }
 }
 console.log(transformHump('font-size'))

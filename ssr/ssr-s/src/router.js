@@ -1,10 +1,11 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
 import Foo from './components/foo.vue'
+import NotFound from './components/notFound'
 Vue.use(VueRouter);
 export default () =>{
     const router = new VueRouter({
-        mode:"history",
+        // mode:"",
         routes:[
             {
                 path: '/',
@@ -14,6 +15,10 @@ export default () =>{
             {
                 path: '/bar',
                 component:() => import('./components/bar.vue')
+            },
+            {
+                path: '*',
+                component: NotFound
             }
         ]
     })

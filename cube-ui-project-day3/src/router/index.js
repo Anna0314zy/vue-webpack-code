@@ -30,7 +30,7 @@ const router = new Router({
     // 在进来之前先默认显示一个loading，等组件加载完毕之后 把loading取消掉
 
     // 高阶函数
-    component: () => import('@/views/Course/index.vue'),
+    component: loadable(() => import('@/views/Course/index.vue')),
     meta: {
       idx: 1,
       keepAlive: true,
@@ -41,7 +41,7 @@ const router = new Router({
         path: 'a',
         name: 'a',
         component: {
-          render(h) {
+          render() {
             return <h1>abc</h1>;
           },
         },
@@ -67,7 +67,7 @@ const router = new Router({
   {
     path: '*',
     component: {
-      render(h) {
+      render() {
         return <h1> 找不到 </h1>;
       },
     },

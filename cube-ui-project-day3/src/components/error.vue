@@ -1,3 +1,9 @@
 <template>
-  <div>组件正在加载中请稍后</div>
+  <div>展示错误组件</div>
 </template>
+<script>
+
+export default {
+  name: 'error-async',
+};
+</script>

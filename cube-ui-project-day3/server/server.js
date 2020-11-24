@@ -112,7 +112,7 @@ let btnPermission = [1, 3, 5];
 let menuList = [
   {pid: -1, name: '购物车', id: 1, auth: 'cart'},
   {pid: 1, name: '购物车列表', id: 4, auth: 'cart-list'},
-  {pid: 4, name: '彩票', id: 5, auth: 'lottery'},
+  // {pid: 4, name: '彩票', id: 5, auth: 'lottery'},
   {pid: 4, name: '商品', id: 6, auth: 'product'},
 ]
 router.post('/api/login', async ctx => {
