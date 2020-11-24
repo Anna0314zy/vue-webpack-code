@@ -1,4 +1,16 @@
 #root {
-    background: red;
-    background: url("./timg.jpeg");
+    height: 300px;
+    /*background: url("./timg.jpeg");*/
+    background-color: red;
+}
+img {
+    height: 400px;
+    width: 400px;
+    background-color: red;
+}
+::placeholder {
+    color: red;
+}
+.container {
+    display: flex;
 }

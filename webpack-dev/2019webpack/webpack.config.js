@@ -1,4 +1,5 @@
 const path = require('path');
+const glob = require('glob')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const {CleanWebpackPlugin} = require('clean-webpack-plugin')
 const MiniCssExtractPlugin=require('mini-css-extract-plugin')
@@ -7,7 +8,7 @@ const TerserWebpackPlugin = require('terser-webpack-plugin');
 const OptimizeCssAssetsWebpackPlugin = require('optimize-css-assets-webpack-plugin')
 module.exports = {
     mode: 'development',
-    // mode: 'production',//只有在生产环境才会启用压缩
+    // mode: 'production',//只有在生产环境才会启用压缩 自带压缩
     optimization: { //这里放优化的内容
         minimizer: [
             //支持es6
@@ -22,7 +23,11 @@ module.exports = {
             // new UglifyjsWebpackPlugin({
             //
             // }),
-            new OptimizeCssAssetsWebpackPlugin()
+            new OptimizeCssAssetsWebpackPlugin({
+                assetNameRegExp: /\.css$/g,
+                //post-css 的优化分离插件
+                cssProcessor: require('cssnano')
+            })
         ]
     },
     // entry: path.resolve(__dirname, 'src/index.js'),
@@ -30,6 +35,7 @@ module.exports = {
 
     entry: {
         vendor: ['react', 'react-dom'],
+        // vendor: glob.sync('./node_modules/**/*.js'),
         index: './src/index.js',
 
         // login: './src/login.js'
@@ -39,9 +45,8 @@ module.exports = {
     //一般 每个chunk都会生成一个文件
     output: {
         path: path.resolve(__dirname, 'dist'),
-        filename: '[name][hash].js',
-        //chunkhash 依赖的代码块变了才会变
-        // Cannot use [chunkhash] or [contenthash] for chunk in '[name][hash][chunkhash].js'
+        filename: '[name].[contenthash].js',
+        //chunkhash 依赖的代码块变了才会变 contenthash内容变了就变了
         // filename: '[name].[hash: 8].js', //name -- entry里面的key
         //hash 有32 位 hash: 8 取前8位  文件不改hash不变 防止缓存
         publicPath: "/" //根路径 图片路径前缀
@@ -58,16 +63,51 @@ module.exports = {
     module: {
         rules: [
             {
+                test:/\.js$/,
+                use:{
+                    loader: 'babel-loader',
+                    options:{
+                        "presets":[
+                            "@babel/preset-env", //es7转换
+                            "@babel/preset-react"
+                        ],
+                        "plugins":[
+                            "@babel/plugin-proposal-decorators",
+                            "@babel/plugin-proposal-class-properties",
+                        ]
+                    }
+                }
+            },
+            {
                 test: /\.css$/,
                 // use: 'css-loader', //单个
                 // 不用style-loader
-                use: [MiniCssExtractPlugin.loader, 'css-loader'] //从右向左
+                use: [MiniCssExtractPlugin.loader, 'css-loader', 'postcss-loader'] //从右向左
+            },
+            {
+                test: /\.less$/,
+                // use: 'css-loader', //单个
+                // 不用style-loader
+                use: [MiniCssExtractPlugin.loader, 'css-loader', 'less-loader'] //从右向左
+            },
+            {
+                test: /\.scss$/,
+                // use: 'css-loader', //单个
+                // 不用style-loader
+                use: [MiniCssExtractPlugin.loader, 'css-loader','sass-loader'] //从右向左
+            },
+            {
+                test: /\.(html|htm)$/,
+                use:{
+                    loader: "html-withimg-loader"
+                }
             },
             {
                 test: /\.(jpg|png|jpeg)$/,
                 use: {
                     loader: "url-loader",
                     options: {
+                        esModule:false,
                         limit: 10*1024, //如果图片小于10k就转成base64
                         outputPath: 'images',
                         publicPath: '/images'
