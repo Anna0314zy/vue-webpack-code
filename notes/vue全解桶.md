@@ -710,6 +710,14 @@ if(this.height) {
 
 宏任务只执行一个 微任务批量执行
 
+首先我们要明白js是一个单线程的同步任务,后来引入了异步任务,异步任务又分为宏任务和微任务
+事件循环流程:主线程->清空微任务队列->UI渲染->取一个宏任务执行->清空微任务队列->UI渲染->取一个宏任务执行…这样一直循环,直到宏任务微任务都执行完毕
+宏任务: 包括整体代码script，setTimeout，setInterval
+微任务: Promise，process.nextTick
+宏任务可以有多个任务队列,而微任务只有一个任务队列
+
+![WechatIMG88](/Users/zouyu/Desktop/vue-webpack-code/notes/img/WechatIMG88.jpeg)
+
 ```js
 let total = 10000;
     //新版本浏览器优化 当js执行完成后会一并的插入到dom中
@@ -736,6 +744,40 @@ let total = 10000;
     //分片加载 会导致页面dom元素过多 会造成卡顿
     //虚拟列表优化 只渲染当前的可视区域
 ```
+
+```js
+setTimeout(function(){
+ console.log('1');
+});
+new Promise(function(resolve){      
+ console.log('2');
+ resolve();
+}).then(function(){      
+ console.log('3');
+});   
+console.log('4');
+遇到setTimout，异步宏任务，放入宏任务队列中；
+遇到new Promise，new Promise在实例化的过程中所执行的代码都是同步进行的，所以输出2；
+而Promise.then中注册的回调才是异步执行的，将其放入微任务队列中
+遇到同步任务console.log(‘4’);输出4；主线程中同步任务执行完
+从微任务队列中取出任务到主线程中，输出3，微任务队列为空
+从宏任务队列中取出任务到主线程中，输出1，宏任务队列为空，结束
+
+Promise.resolve().then(() => {
+        console.log(1) // 代码块1
+        setTimeout(() => {
+          console.log(2) // 代码块2
+        }, 0)
+      })
+setTimeout(() => {
+  console.log(3) // 代码块3
+  Promise.resolve().then(() => {
+    console.log(4) // 代码块4
+  })
+}, 0)
+```
+
+
 
 ### 3.实现
 
@@ -1129,3 +1171,16 @@ git cherry-pick commitid
 在本地仓库中，有两个分支:branch1和branch2，我们先来查看各个分支的提交
 ```
 
+# js基础
+
+```
+ function Foo(name,age){
+            this.name=name;
+            this.age=age;
+        }
+        Foo.prototype.alertName=function(){
+            alert(this.name);
+        }
+        var f=new Foo('cyy',18);
+        f.alertName();
+```

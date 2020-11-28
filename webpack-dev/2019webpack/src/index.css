@@ -1,3 +1,6 @@
+@import "./3.scss";
+/*@import "./5.less";*/
+
 #root {
     height: 300px;
     /*background: url("./timg.jpeg");*/

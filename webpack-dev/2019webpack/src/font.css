@@ -1,0 +1,8 @@
+@font-face {
+    src: url("./fonts/HabanoST.otf") format("truetype");
+    font-family: 'HabanoST';
+}
+.less-container {
+    font-size: 100px;
+    font-family: "HabanoST";
+}
