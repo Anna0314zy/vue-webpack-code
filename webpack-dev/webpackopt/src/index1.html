@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+<head>
+    ${require('raw-loader!./meta.html').default}
+    <style>
+        /*!!忽略其他loader 如果不忽略会被ss-loader解析*/
+        ${require('!!raw-loader!./index.css').default}
+    </style>
+    <!--    //要放到head里面-->
+    <script>
+        ${require('raw-loader!../node_modules/lib-flexible/flexible.js').default}
+        // new htmlWebpackPlugin 可以识别 获取的代码给babel-loader raw-loader!babel-loader
+        // 再给raw-loader (简单获取啥就显示到这个地方就行了)
+    </script>
+
+    <title>Document</title>
+
+</head>
+
+<body>
+<div id="root"></div>
+<input type="text">
+<script src="react.dll.js"></script>
+<script>
+    // let docEle = document.documentElement;
+    // function setRemUnit() {
+    //     console.log(docEle, docEle.clientcWidth / 10);
+    //     // docEle.style.fontSize = docEle.clientWidth / 10 + 'px'
+    //     docEle.style.fontSize = '10vw'
+    // }
+    // setRemUnit();
+    // window.addEventListener('resize', setRemUnit);
+
+</script>
+</body>
+</html>

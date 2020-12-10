@@ -1,0 +1,10 @@
+#root {
+    width: 375px;
+    height: 375px;
+    border: 1px solid red;
+    box-sizing: border-box;
+}
+* {
+    margin:0;
+    padding: 0;
+}

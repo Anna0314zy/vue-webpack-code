@@ -1,6 +1,6 @@
 const path = require('path');
 const webpack = require('webpack');
-// const glob = require('glob');
+var FriendlyErrorsWebpackPlugin = require('friendly-errors-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
@@ -8,8 +8,39 @@ const TerserWebpackPlugin = require('terser-webpack-plugin');
 // const UglifyjsWebpackPlugin = require('uglifyjs-webpack-plugin');
 const OptimizeCssAssetsWebpackPlugin = require('optimize-css-assets-webpack-plugin');
 const htmlWebpackExternalsPlugin = require('html-webpack-externals-plugin');
-
-module.exports = {
+const {BundleAnalyzerPlugin} = require('webpack-bundle-analyzer');
+const glob = require('glob');
+const PurgecssWebpackPlugin=require('purgecss-webpack-plugin');
+const PATHS = {
+  src: path.join(__dirname, 'src')
+}
+console.log(PATHS, 'PATHS');
+const entryFiles = glob.sync('./src/entries/*.js');
+const speedMeasureWebpackPlugin = require('speed-measure-webpack-plugin');
+const snw = new speedMeasureWebpackPlugin();
+// [
+//   './src/entries/index.js',
+//   './src/entries/index1.js',
+//   './src/entries/index2.js'
+// ]
+  let entry = {};
+let htmlWebpackPlugins = [];
+entryFiles.forEach(entryFile => {
+  // console.log(path.sep, '/');
+  let entryName = path.basename(entryFile.split(path.sep).pop(), '.js');
+  // console.log(path.basename(entryFile.split(path.sep).pop(), '.js'), 'pathname')
+  entry[entryName] = entryFile;
+  htmlWebpackPlugins.push(new HtmlWebpackPlugin({
+    template: `./src/pages/${entryName}.html`,
+    filename: `${entryName}.html`,
+    // minify: false,
+    // hash: true, // 为了避免缓存，可以在产出的文件后面加hash值
+    chunks: [entryName], //指定引入的代码块  用的不多 感觉不好使
+    // chunksSortMode: "manual" //对引入的代码块进行排序的模式
+  }))
+  //path.extname 扩展名
+})
+module.exports = snw.wrap({
   mode: 'development',
   // mode: 'production',//只有在生产环境才会启用压缩 自带压缩
   optimization: { // 这里放优化的内容
@@ -36,20 +67,20 @@ module.exports = {
   devtool: 'eval',
   //定制一些查找文件的规则
   resolve: {
-    extensions: ['.js','.jsx', '.vue', '.scss','.less', '.css'],
-    alias:{
+    extensions: ['.js', '.jsx', '.vue', '.scss', '.less', '.css'],
+    alias: {
       //引入的时候 直接找你指定的路径 就不从按照node_modules规则找了
       'bootstrap': path.join(__dirname, 'node_modules/bootstrap/dist/css/bootstrap.css'),
     },
-    //可以减少查找的路径 加快查找速度 可以自己添加查找路径
+     //可以减少查找的路径 加快查找速度 可以自己添加查找路径
     modules: ['node_modules', 'zfmodules'],// 先从node_modules里面找 找不到 再找zfmath
     mainFields: ['style', 'browser', 'module', 'main'],
     mainFiles: ['base.js', 'index.js']
   },
   //这个选项是用来指定查找loader
   resolveLoader: {
-    extensions: ['.js','.jsx', '.vue', '.scss','.less', '.css'],
-    alias:{
+    extensions: ['.js', '.jsx', '.vue', '.scss', '.less', '.css'],
+    alias: {
       //引入的时候 直接找你指定的路径 就不从按照node_modules规则找了
       'bootstrap': path.join(__dirname, 'node_modules/bootstrap/dist/css/bootstrap.css'),
     },
@@ -60,13 +91,14 @@ module.exports = {
   },
   // entry: path.resolve(__dirname, 'src/index.js'),
   // 多入口
-  entry: {
-    vendor: ['react', 'react-dom'],
-    // vendor: glob.sync('./node_modules/**/*.js'),
-    index: './src/index.js',
-
-    // login: './src/login.js'
-  },
+  entry: entry,
+  // entry: {
+  //   // vendor: ['react', 'react-dom'],
+  //   // vendor: glob.sync('./node_modules/**/*.js'),
+  //   index: './src/index.js',
+  //
+  //   login: './src/login.js'
+  // },
   // Multiple chunks emit assets to the same filename bundle.js (chunks index and login)
   // 如果是单入口 chunk的名字就叫main 如果是多入口 就是entry的key
   // 一般 每个chunk都会生成一个文件
@@ -89,9 +121,9 @@ module.exports = {
     contentBase: path.resolve(__dirname, 'dist'), // 产出文件的根目录
     port: 8080,
     host: 'localhost',
-    compress: true,
+    compress: true, //会启用gizp压缩
     proxy: {
-      '/api':{
+      '/api': {
         target: 'http://localhost:3000',
         pathRewrite: {
           '^/api': ''
@@ -104,7 +136,7 @@ module.exports = {
     },
   },
   module: {
-    noParse:/jquery|lodash/,//不去解析jquery中的依赖库
+    noParse: /jquery|lodash/,//不去解析jquery中的依赖库
     rules: [
       // {
       //   test: /\.js$/,
@@ -132,20 +164,33 @@ module.exports = {
         },
       },
       {
-        test: /\.css$/,
+        test: /\.(css)$/,
         // use: 'css-loader', //单个
         // 不用style-loader
         use: [
-          MiniCssExtractPlugin.loader,
+          {
+            loader: MiniCssExtractPlugin.loader,
+            options: {
+              // publicPath: '../' //回到上一级目录r
+            }
+
+          },
           {
             loader: 'css-loader',
             options: {
-              importLoaders: 2,
+              importLoaders: 3,
               // 0 no loader
               // 1 postcss-loader
               // 2 postcss-loader sass-loader
             },
           },
+          {
+            loader: "px2rem-loader",
+            options: {
+                remUnit: 75, //1rem = 75px
+                remPrecision: 8 //除不尽 保留8位小数
+            }
+        },
           'postcss-loader',
           'sass-loader',
         ], // 从右向左
@@ -165,6 +210,7 @@ module.exports = {
         // 不用style-loader
         use: [MiniCssExtractPlugin.loader, 'css-loader', 'sass-loader'], // 从右向左
       },
+      // 处理html中的图片
       {
         test: /\.(html|htm)$/,
         use: {
@@ -172,17 +218,42 @@ module.exports = {
         },
       },
       {
-        test: /\.(jpg|png|jpeg)$/,
-        use: {
-          loader: 'url-loader',
-          options: {
-            esModule: false,
-            limit: 10 * 1024, // 如果图片小于10k就转成base64
-            outputPath: 'images',
-            publicPath: '/images',
-
+        test: /\.(gif|png|jpe?g|svg)$/i,
+        use: [
+          {
+            loader: 'url-loader',
+            options: {
+              esModule: false,
+              limit: 10 * 1024, // 如果图片小于10k就转成base64
+              outputPath: 'images',
+              publicPath: '/images',
+            }
           },
-        },
+          {
+            loader: 'image-webpack-loader',
+            options: {
+              mozjpeg: {//jpeg压缩
+                progressive: true,
+                quality: 65
+              },
+              // optipng.enabled: false will disable optipng
+              optipng: {//png压缩
+                enabled: false,
+              },
+              pngquant: {//png压缩
+                quality: [0.65, 0.90],
+                speed: 4
+              },
+              gifsicle: {//gif压缩
+                interlaced: false,
+              }
+              // the webp option will enable WEBP
+              //webp: {
+              // quality: 75
+              //}
+            }
+          },
+        ]
       },
       {
         test: /\.(woff|woff2|ttf|eot|svg|otf)$/, // 二进制文件
@@ -197,6 +268,7 @@ module.exports = {
       // }
     ],
   },
+  // stats: 'minimal',
   plugins: [
     // 此插件会自动向所有的模块注入一个_变量
     // 每个模块注入的是一个局部变量
@@ -214,20 +286,31 @@ module.exports = {
       // jQuery: 'jquery',
       $_: 'lodash',
     }),
+    ...htmlWebpackPlugins,
     // 产出html文件
-    new HtmlWebpackPlugin({
-      template: './src/index.html',
-      filename: 'index.html',
-      minify: false,
-      // hash: true, // 为了避免缓存，可以在产出的文件后面加hash值
-      // chunks: ['common', 'index'], //指定引入的代码块  用的不多 感觉不好使
-      // chunksSortMode: "manual" //对引入的代码块进行排序的模式
-    }),
+    // new HtmlWebpackPlugin({
+    //   template: './src/index.html',
+    //   filename: 'index.html',
+    //   minify: false,
+    //   // hash: true, // 为了避免缓存，可以在产出的文件后面加hash值
+    //   chunks: ['index'], //指定引入的代码块  用的不多 感觉不好使
+    //   // chunksSortMode: "manual" //对引入的代码块进行排序的模式
+    // }),
     new CleanWebpackPlugin(), // 清除打包目录
+    new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
+    new FriendlyErrorsWebpackPlugin(),
+    new BundleAnalyzerPlugin({
+      analyzerMode: 'disabled',
+      generateStatsFile: true //是否生产stats文件
+    }),
+    //清除没有用到的类名
+    new PurgecssWebpackPlugin({
+      paths: glob.sync(`${PATHS.src}/**/*`,  { nodir: true }),
+    }),
     new MiniCssExtractPlugin({
-      filename: 'css/[name][contenthash].css', // name 代码块chunk的名字
+      filename: 'css/[name][contenthash].css' // name 代码块chunk的名字
       // chunkhash 只要打包后的模块有一个发生了变化 都会改变
       // chunkFilename: '[id].css' //代码块的名字 在异步加载的时候用的 分割代码块然后异步加载
     }), // 分离css
   ],
-};
+})

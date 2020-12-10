@@ -1,0 +1,40 @@
+ DONE  Compiled successfully in 444ms12:14:50 AM
+
+Webpack Bundle Analyzer saved stats file to /Users/zouyu/Desktop/vue-webpack-code/webpack-dev/2019webpack/dist/stats.json
+
+
+ SMP  ⏱  
+General output time took 0.468 secs
+
+ SMP  ⏱  Plugins
+HtmlWebpackPlugin took 0.031 secs
+BundleAnalyzerPlugin took 0.02 secs
+HtmlWebpackExternalsPlugin took 0.009 secs
+CleanWebpackPlugin took 0.005 secs
+FriendlyErrorsWebpackPlugin took 0.004 secs
+IgnorePlugin took 0.001 secs
+MiniCssExtractPlugin took 0.001 secs
+ProvidePlugin took 0.001 secs
+
+ SMP  ⏱  Loaders
+babel-loader took 0.346 secs
+  module count = 3
+html-webpack-plugin, and 
+html-withimg-loader took 0.006 secs
+  module count = 3
+
+
+
+{
+  "errors": [],
+  "warnings": [],
+  "modules": [],
+  "filteredModules": 3,
+  "logging": {
+    "webpack.buildChunkGraph.visitModules": {
+      "entries": [],
+      "filteredEntries": 2,
+      "debug": false
+    }
+  }
+}

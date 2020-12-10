@@ -1,0 +1,15 @@
+.two {
+    height: 375px;
+    border: 1px solid red;
+}
+.three {
+    height: 375px;
+    border: 1px solid red;
+}
+
+.one {
+    height: 375px;
+    border: 1px solid red;
+    background-image: url('./a.png?sprite');
+}
+

@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script>
+        let docEle = document.documentElement;
+      function setRemUnit() {
+          console.log(docEle, docEle.clientWidth / 10);
+          docEle.style.fontSize = docEle.clientWidth / 10 + 'px'
+      }
+      setRemUnit();
+      window.addEventListener('resize', setRemUnit);
+  </script>
+</head>
+<body>
+<div class="less-container1"></div>
+
+</body>
+</html>

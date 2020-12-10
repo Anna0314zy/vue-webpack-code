@@ -9,11 +9,21 @@
 </head>
 <body>
 <div id="root"></div>
-<div class="less-container">less</div>
+<div class="less-container1">less</div>
 <div class="less-container1">sass</div>
 <input type="text" placeholder="请填写用户名">
 <div class="container"></div>
 
 <!--<img src="./timg.jpeg" alt="">-->
 </body>
+<script>
+      let docEle = document.documentElement;
+    function setRemUnit() {
+        console.log(docEle, docEle.clientWidth / 10);
+        docEle.style.fontSize = docEle.clientWidth / 10 + 'px'
+        // docEle.style.fontSize = '10vw'  
+    }
+    setRemUnit();
+    window.addEventListener('resize', setRemUnit);
+</script>
 </html>

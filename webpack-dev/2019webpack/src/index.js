@@ -20,9 +20,22 @@
 // import $ from "expose-loader?exposes[]=$&exposes[]=jQuery!jquery";
 // import _ from 'lodash'
 //
-import './3'
-console.log($_.join(['a','b'], '$ggg'));
-console.log($('#root'))
-console.log(process.env, 'env');
+// import './3'
+// console.log($_.join(['a','b'], '$ggg'));
+// console.log($('#root'))
+// console.log(process.env, 'env');
+// import moment from 'moment';
+// import 'moment/locale/zh-cn'
+// moment.locale('zh-cn');
+// var r = moment("20111031", "YYYYMMDD").fromNow()
+// console.log(r);
+import './5.less'
+let promise = new Promise((resolve, reject) => {
+
+});
+console.log(promise, 'promise');
+// let zhufeng = require('zhufenglibz');
+// console.log(zhufeng.add(2,3), 'gggg');
+
 
 

@@ -1184,3 +1184,100 @@ git cherry-pick commitid
         var f=new Foo('cyy',18);
         f.alertName();
 ```
+
+## 1.节流（throttle）与防抖（debounce）
+
+有些浏览器事件可以在短时间内快速触发多次，比如调整窗口大小或向下滚动页面。例如，监听页面窗口滚动事件，并且用户持续快速地向下滚动页面，那么滚动事件可能在 3 秒内触发数千次，这可能会导致一些严重的性能问题。
+
+如果在面试中讨论构建应用程序，出现滚动、窗口大小调整或按下键等事件请务必提及 **防抖(Debouncing)** 和 **函数节流（Throttling）**来提升页面速度和性能。这两兄弟的本质都是以**闭包**的形式存在。通过对事件对应的回调函数进行包裹、以自由变量的形式缓存时间信息，最后用 setTimeout 来控制事件的触发频率。
+
+## 2.ptath
+
+```js
+let myPath2 = path.join(__dirname,'./img/so'); 
+let myPath3 = path.resolve(__dirname,'/img/so'); 
+let myPath4 = path.resolve(__dirname,'./img/so'); 
+console.log(__dirname); //D:\myProgram\test 
+console.log(myPath); //D:\myProgram\test\img\so 
+console.log(myPath2); //D:\myProgram\test\img\so 
+console.log(myPath3); //D:\img\so<br> 
+
+// /Users/zouyu/Desktop/vue-webpack-code/webpack-dev/webpack-dev-l/img
+// /Users/zouyu/Desktop/vue-webpack-code/webpack-dev/webpack-dev-l/img/img/so
+// /Users/zouyu/Desktop/vue-webpack-code/webpack-dev/webpack-dev-l/img/img/so
+// /img/so
+// /Users/zouyu/Desktop/vue-webpack-code/webpack-dev/webpack-dev-l/img/img/so
+```
+
+## 遇到的面试题
+
+```js
+1.如何实现左边固定180px 右边自适应
+2.如何实现一个三角
+3.如何实现元素居中对齐
+4.<div class="root"></div>
+    <div class="parent"><div class="child"></div></div>
+      .root {
+        height: 200px;
+        background-color: red;
+        position: relative;
+    }
+    .parent {
+        height: 200px;
+        background-color: aqua;
+    
+    }
+    .child {
+       position: absolute;
+       width: 200px;
+       height: 100px;
+       background-color: blue;
+    }
+
+child的位置
+5.es6会哪些方法 some every 和 forEach的区别  
+some只要有个元素满足条件  return true能终止遍历
+every 每个元素都满足条件  return true能终止遍历
+forEach是每个都执行一遍
+6.vue如何传值的
+7.vue是干啥的 为啥要用vue vue的浏览器兼容问题 
+因为vue2.0 用到了Object.defineProperty来监听数据的变化 只能兼容到ie8以上的版本
+8.用过vuex吗 怎么用的？哪些场景需要用到？
+9.props如何定义数据的类型
+10.路由是如何传参的？query和params的区别 动态路由知道吗
+query地址栏传参--刷新后参数能保留
+params 如果不写动态路由 刷新后参数不能保留
+11.如果两个页面 跳转到另一个页面 -- 需要回到前一个页面跳转前的高度 ---需要用到keepalive --
+12.data里面定义一个对象，form:{}
+有个按钮 ---this.form.name = 'zou'
+问你name 能在浏览器显示出来吗？
+13.什么是v-model
+14.路由有哪些钩子函数 分别是什么 怎么用 用的场景？
+
+```
+
+```js
+前端优化
+1.路由懒加载，在路由跳转的时候请求响应的资源，解决首屏资源加载过多，打开慢的问题
+2.图片加载，对资源小的图片采用base64格式内嵌到网页上
+图片过多实现懒加载，当鼠标滚动到一定位置的时候开始加载图片
+也可以用一张图片先占位，等待资源请求过来时候再展示图片
+3.代码优化，做数组循环的时候，some可以提前终止数组循环，写函数的时候尽量少用一些闭包函数，闭包函数不利于js的内存回收机制
+4.使用vue的时候，应该用对象id作为key,防止数据结构变化时，减少dom渲染，vue-dom更新策略中会复用相同key的dom,只改变内容，不操作dom
+4.webpack优化
+1.对第三方库可以采用cdn加载
+2.webpack可以把用不到的样式清除掉
+3.利用webpack的tree-shaking,可以采用es6规范的导入导出，写函数尽量减少函数的副作用，函数的副作用就是不要对函数外部变量进行修改，
+使用import动态引入，这样webpack打包处理的时候可以清除用不到的函数方法，减少打包体积
+4.webpack可以用插件实现样式的懒加载 mini-css-extract-plugin
+5.webpack对动态引入的js会单独打包import(/*webpackPrefetch:true*//*webpackChunkName:'hello'*/'./hello').then(result => {
+        console.log(result.default);
+    })
+这样打包会在head标签生成一个link
+<link rel="prefetch" as="script" href="hello.bundle.js">
+预获取-在浏览器空闲的时候下载资源
+
+
+
+```
+

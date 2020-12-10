@@ -1,17 +1,18 @@
-class AsyncSeriesHook { // 钩子是同步的
-    constructor(args) {
-        this.tasks = [];
-    }
-    tapPromise(name,task) { 
-        this.tasks.push(task);
-    }
-    promise(...args) {
-       let [first, ...others] = this.tasks;
-       return others.reduce((p, n) => {
-       return  p.then(() => n(...args));
-       }, first(...args))
-    }
-}
+let {AsyncSeriesHook} =require('tapable') ;
+// class AsyncSeriesHook { // 钩子是同步的
+//     constructor(args) {
+//         this.tasks = [];
+//     }
+//     tapPromise(name,task) {
+//         this.tasks.push(task);
+//     }
+//     promise(...args) {
+//        let [first, ...others] = this.tasks;
+//        return others.reduce((p, n) => {
+//        return  p.then(() => n(...args));
+//        }, first(...args))
+//     }
+// }
 let hook = new AsyncSeriesHook(['name']);
 let total = 0;
 hook.tapPromise('react', function(data) {

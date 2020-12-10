@@ -1,0 +1,14 @@
+.two {
+    background-image: url('./b.png?sprite');
+    height: 200px;
+}
+.three {
+    background-image: url('./c.png?sprite');
+    height: 200px;
+}
+
+.one {
+    background-image: url('./a.png?sprite');
+    height: 200px;
+}
+

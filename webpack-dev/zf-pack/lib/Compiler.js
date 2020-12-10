@@ -1,19 +1,14 @@
 let fs = require('fs');
 let path = require('path');
-let babylon = require('babylon');
-let  traverse = require('@babel/traverse').default;
-let t = require('@babel/types');
-let generator = require('@babel/generator').default;
+let babylon = require('babylon');//源代码转换成语法树
+let  traverse = require('@babel/traverse').default;//用来遍历语法树的节点并且对节点增删改
+let t = require('@babel/types');//判断某种节点是否指定类型 或者用来生成一个新节点
+let generator = require('@babel/generator').default;//用来把语法树重新编程代码
+//源代码 -> babylon转成语法树-->traverse遍历节点--->types生成新的节点替换老节点->generator重新生成代码
 let ejs = require('ejs');
 let {SyncHook} = require('tapable')
-//babylon  主要是把源码转换成AST
-//@babel-traverse  遍历节点
-//@babel/types  替换
-//@bable/generator 
 class Compiler {
    constructor(config) {
-       //entry output
-    //    console.log(config, 'config--');
     this.config = config;
     //需要保存入口文件的路径
     this.entryId; // './src/index.js
@@ -97,7 +92,7 @@ class Compiler {
         this.entryId = moduleName; //保存入口的名字
     }
     //解析需要把source源码进行改造  返回个依赖列表
-    let {sourceCode, dependencies} = this.parse(source, path.dirname(moduleName))  // 
+    let {sourceCode, dependencies} = this.parse(source, path.dirname(moduleName))  //
     // console.log(sourceCode, dependencies);
     this.modules[moduleName] = sourceCode;
     dependencies.forEach(dep => { // 模块循环加载
@@ -112,7 +107,7 @@ class Compiler {
     //模板路径
     let templateStr = this.getSource(path.join(__dirname, 'main.ejs'));
     let code = ejs.render(templateStr, {
-        entryId: this.entryId, 
+        entryId: this.entryId,
         modules: this.modules
     })
     this.assets ={};

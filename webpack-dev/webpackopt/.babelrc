@@ -1,0 +1,11 @@
+{
+  "presets":[
+    ["@babel/preset-env", {
+      "modules": false
+    }]
+  ],
+  "plugins":[
+    ["@babel/plugin-proposal-decorators", { "legacy": true }], //旧的写法
+    [ "@babel/plugin-proposal-class-properties",{"loose": true}] //松散的模式
+  ]
+}

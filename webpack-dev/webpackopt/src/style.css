@@ -1,0 +1,6 @@
+@import "./base.css";
+.root{
+    height: 500px;
+    border: 1px solid #ccc;
+    background-image: url("./wo.jpg");
+}
