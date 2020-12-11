@@ -2102,6 +2102,72 @@ emit
 
 ![image-20201210230354178](/Users/zouyu/Desktop/vue-webpack-code/webpack-dev/img/image-20201210230354178.png)
 
+## 热更新
+
+### 1.服务端
+
+![image-20201210234014584](/Users/zouyu/Desktop/vue-webpack-code/webpack-dev/img/image-20201210234014584.png)
+
+![image-20201210234208140](/Users/zouyu/Desktop/vue-webpack-code/webpack-dev/img/image-20201210234208140.png)
+
+![image-20201210234635326](/Users/zouyu/Desktop/vue-webpack-code/webpack-dev/img/image-20201210234635326.png)
+
+
+
+![image-20201210234453348](/Users/zouyu/Desktop/vue-webpack-code/webpack-dev/img/image-20201210234453348.png)
+
+
+
+![image-20201210234926661](/Users/zouyu/Desktop/vue-webpack-code/webpack-dev/img/image-20201210234926661.png)
+
+![image-20201210235003523](/Users/zouyu/Desktop/vue-webpack-code/webpack-dev/img/image-20201210235003523.png)
+
+### 2.客户端
+
+![image-20201210235138561](/Users/zouyu/Desktop/vue-webpack-code/webpack-dev/img/image-20201210235138561.png)
+
+
+
+
+
+
+
+![image-20201210235337031](/Users/zouyu/Desktop/vue-webpack-code/webpack-dev/img/image-20201210235337031.png)
+
+
+
+## 进阶
+
+[1,2,3].includes('')  promise 这是高级语法 需要配置 usage :好处是可以按需加载
+
+![image-20201211100720232](/Users/zouyu/Desktop/vue-webpack-code/webpack-dev/img/image-20201211100720232.png)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 # [webpack的loader的原理和实现-博文推荐](https://www.cnblogs.com/lyraLee/p/12050811.html)
