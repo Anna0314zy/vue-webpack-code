@@ -1281,3 +1281,7 @@ params 如果不写动态路由 刷新后参数不能保留
 
 ```
 
+# 并发请求
+
+![image-20201219213336803](/Users/zouyu/Library/Application Support/typora-user-images/image-20201219213336803.png)
+
